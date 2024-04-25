@@ -4,16 +4,13 @@
 // Created by wojciech on 08.04.24.
 //
 
-#include "Graph.h"
-#include <unordered_set>
+#include "EdgeListGraph.h"
 
-template<typename T>
-void Graph<T>::addEdge(Graph::Edge edge) {
+void EdgeListGraph::addEdge(EdgeListGraph::Edge edge) {
     edges.push_back(edge);
 }
 
-template<typename T>
-Graph<T>::Graph(std::vector<Edge> edgeList){
+EdgeListGraph::EdgeListGraph(std::vector<Edge> edgeList){
     for(auto &&it :edgeList)
         addEdge(it);
 }
@@ -21,8 +18,7 @@ Graph<T>::Graph(std::vector<Edge> edgeList){
 
 
 
-template<typename T>
-void Graph<T>::DFS(int vertex, std::unordered_set<int> * traversed) {
+void EdgeListGraph::DFS(int vertex, std::unordered_set<int> * traversed) {
     std::unique_ptr<std::unordered_set<int>> traversedPtr;
     if (traversed == nullptr) {
         traversedPtr = std::make_unique<std::unordered_set<int>>();

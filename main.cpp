@@ -1,9 +1,9 @@
 #include <iostream>
-#include "Graph.h"
-#include "Graph.cpp"
+#include "EdgeListGraph.h"
 #include <random>
 
 #include <vector>
+#include "AdjacencyListGraph.h"
 int getRandomInteger(int a, int b){
     std::random_device rd;  // Obtain a random number from hardware
     std::mt19937 gen(rd()); // Seed the random number generator
@@ -15,23 +15,27 @@ int getRandomInteger(int a, int b){
     return dis(gen);
 }
 int main() {
-    std::vector<Graph<int>::Edge> edgeList = {Graph<int>::Edge(0,1),
-                                              Graph<int>::Edge(2,1),
-                                              Graph<int>::Edge(3,1),
-                                              Graph<int>::Edge(4,1),
-                                              Graph<int>::Edge(5,1),
+    AdjacencyListGraph adjacencyListGraph({{1,2},{1,3,4},{1,2,4}});
+    adjacencyListGraph.DFS();
+    printf("\n");
+    std::vector<EdgeListGraph::Edge> edgeList = {EdgeListGraph::Edge(0, 1),
+                                                      EdgeListGraph::Edge(2, 1),
+                                                      EdgeListGraph::Edge(3, 1),
+                                                      EdgeListGraph::Edge(4, 1),
+                                                      EdgeListGraph::Edge(5, 1),
 
                                               };
-    Graph<int> graph(edgeList);
-    std::vector<Graph<int>::Edge> edgeList1;
+
+    EdgeListGraph graph(edgeList);
+    std::vector<EdgeListGraph::Edge> edgeList1;
     for (int i = 0; i < 10; ++i) {
-        Graph<int>::Edge  edge = {getRandomInteger(0,3), getRandomInteger(0,3)};
+        EdgeListGraph::Edge  edge = {getRandomInteger(0, 3), getRandomInteger(0, 3)};
         edgeList1.push_back(edge);
     }
 
-    Graph<int> graph1(edgeList1);
-    graph.DFS(1);
+    EdgeListGraph graph1(edgeList1);
+    //graph.DFS(1);
     //graph.DFS(0);
-    //graph1.DFS(2);
+    graph1.DFS(2);
     return 0;
 }
