@@ -8,17 +8,27 @@
 #include <vector>
 #include <unordered_set>
 #include <map>
-#include "memory"
+#include <memory>
+#include <queue>
+#include "library.h"
+#include <stack>
 
 class AdjacencyListGraph {
 
 
 public:
-    explicit AdjacencyListGraph(const std::vector<std::vector<int>> &adjacencyVector);
+    explicit AdjacencyListGraph(const std::vector<std::vector<bool>> upperMatrix);
     void DFS(int vertex = {0} ,std::unordered_set<int> * traversed = nullptr);
-    void BFS();
+    void DFSWithTimer(){ TimeCounter timeCounter(cellInfo);DFS();}
+    void BFS(int vertex = 0);
+    void topologicalSortBFS();
+    void topologicalSortDFS();
+    void DFSUtil(int vertex, std::unordered_set<int>& visited, std::stack<int>& stack);
+
+    static void updateCellInfo(TimeCounter::CellInfo);
 
 private:
+    static inline TimeCounter::CellInfo cellInfo;
     std::map<int, std::vector<int>> adjacencyList;
 
 

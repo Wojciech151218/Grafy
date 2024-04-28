@@ -5,11 +5,12 @@
 #include "AdjacencyListGraph.h"
 
 
-AdjacencyListGraph::AdjacencyListGraph(const std::vector<std::vector<int>> &adjacencyVector) {
-    int i = 0;
-    for(auto &&it:adjacencyVector) {
-
-        adjacencyList.emplace(i++,it);
+AdjacencyListGraph::AdjacencyListGraph(const std::vector<std::vector<bool>> upperMatrix) {
+    for (int i = 0; i < upperMatrix.size(); ++i){
+        std::vector<int> temp;
+        for(int j = 0; j < upperMatrix.size()-i; ++j)
+            if(upperMatrix[i][j]) temp.push_back(j+i+1);
+        adjacencyList.emplace(i,temp);
     }
 }
 
@@ -23,9 +24,101 @@ void AdjacencyListGraph::DFS(int vertex ,std::unordered_set<int>* traversed ) {
     traversed->insert(vertex);
     std::cout << vertex << " ";
     for (const auto& neighbour : adjacencyList[vertex]) {
-        if (traversed->find(neighbour) == traversed->end()) {
+        if (traversed->find(neighbour) == traversed->end())
             DFS(neighbour, traversed);
+    }
+
+    return;
+}
+
+void AdjacencyListGraph::BFS(int vertex) {
+    //COUNTER
+    TimeCounter timeCounter(cellInfo);
+        std::unordered_set<int> visited;
+        std::queue<int> queue;
+
+        queue.push(vertex);
+        visited.insert(vertex);
+
+        while (not queue.empty()) {
+            int currentVertex = queue.front();
+            queue.pop();
+            std::cout << currentVertex << " ";
+
+            for (int neighbor : adjacencyList[currentVertex]) {
+                if (visited.find(neighbor) == visited.end()) {
+                    queue.push(neighbor);
+                    visited.insert(neighbor);
+                }
+            }
+        }
+}
+
+void AdjacencyListGraph::updateCellInfo(TimeCounter::CellInfo CI) {
+    AdjacencyListGraph::cellInfo = CI;
+}
+void AdjacencyListGraph::topologicalSortBFS() {
+    // Calculate indegrees for each vertex
+    std::vector<int> indegree(adjacencyList.size(), 0);
+    for (const auto& pair : adjacencyList) {
+        for (int v : pair.second)
+            indegree[v]++;
+    }
+
+    std::queue<int> q;
+    std::vector<int> result;
+
+    // Enqueue vertices with indegree 0
+    for (int i = 0; i < indegree.size(); ++i)
+        if (not indegree[i]) q.push(i);
+
+
+    while (!q.empty()) {
+        int v = q.front();
+        q.pop();
+        result.push_back(v);
+
+        // Decrease indegree of adjacent vertices
+        for (int u : adjacencyList[v]) {
+            indegree[u]--;
+            if (indegree[u] == 0)
+                q.push(u);
         }
     }
-    return;
+
+    // Output topological order
+    for (int v : result)
+        std::cout << v << " ";
+
+
+}
+
+void AdjacencyListGraph::DFSUtil(int vertex, std::unordered_set<int>& visited, std::stack<int>& stack) {
+    visited.insert(vertex);
+
+    for (int neighbor : adjacencyList[vertex]) {
+        if (visited.find(neighbor) == visited.end()) {
+            DFSUtil(neighbor, visited, stack);
+        }
+    }
+
+    stack.push(vertex);
+}
+
+void AdjacencyListGraph::topologicalSortDFS() {
+    std::stack<int> stack;
+    std::unordered_set<int> visited;
+
+    for (const auto& pair : adjacencyList) {
+        int vertex = pair.first;
+        if (visited.find(vertex) == visited.end()) {
+            DFSUtil(vertex, visited, stack);
+        }
+    }
+
+    // Print the topological ordering
+    while (!stack.empty()) {
+        std::cout << stack.top() << " ";
+        stack.pop();
+    }
 }
