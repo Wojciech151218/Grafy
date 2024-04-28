@@ -12,10 +12,9 @@
 #include <queue>
 #include <stack>
 #include "library.h"
+#include "IGraph.h"
 
-class EdgeListGraph {
-private:
-    enum Colour{White,Grey,Black};
+class EdgeListGraph : private IGraph{
 public:
     struct Edge {
         int sourceVertex;
@@ -29,7 +28,7 @@ public:
     void topologicalSortBFS();
     void topologicalSortDFS();
     void DFSWithTimer(){ TimeCounter timeCounter(cellInfo);DFS();}
-    static void updateCellInfo(TimeCounter::CellInfo cI){cellInfo = cI;};
+
 
 
     void addEdge(Edge edge);

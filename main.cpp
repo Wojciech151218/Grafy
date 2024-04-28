@@ -5,6 +5,7 @@
 
 #include <vector>
 #include "AdjacencyListGraph.h"
+#include "AdjacencyMatrixGraph.h"
 int generateRandomInteger(int min, int max) {
     std::random_device rd;  // Obtain a random number from hardware
     std::mt19937 gen(rd()); // Seed the random number generator
@@ -26,7 +27,7 @@ bool getRandomBool(double probability){
     return randNum < probability;
 }
 std::vector<std::vector<bool>> getRandomMatrix(int size){
-    int edgeAmount = (size-1)*size/4;
+    int edgeAmount = (size-1)*size/4 ;
     int availableCells = size*(size-1)/2;
     double probability = double(edgeAmount)/double(availableCells);
     //diagonala macierzy nie może być pełna elementy macierzy będą indeksowane od 1 elementu a nie elementu 0
@@ -42,7 +43,8 @@ std::vector<std::vector<bool>> getRandomMatrix(int size){
         for (int j = 0; j < size-i-1; ++j) {
             temp.push_back(getRandomBool(probability));
         }
-        temp[generateRandomInteger(0, size-i-1)] = true;// losowy element jest zapełniony po to by mieć pewność że graf będzie spójny
+        int randomInt = generateRandomInteger(0, size-i-2);
+        temp[randomInt] = true;// losowy element jest zapełniony po to by mieć pewność że graf będzie spójny
         result.push_back(temp);
     }
     return result;
@@ -58,25 +60,26 @@ int main() {
 
     AdjacencyListGraph aLGraph(randomMatrix);
     EdgeListGraph eLGraph(randomMatrix);
+    AdjacencyMatrixGraph amGraph(randomMatrix);
 
-    aLGraph.DFSWithTimer();
-    printf("\n");
-    aLGraph.BFS();
-    printf("\n");
-    aLGraph.topologicalSortBFS();
-    printf("\n");
-    aLGraph.topologicalSortDFS();
-    printf("\n");
-    printf("\n");
+    printf("DFS dla listy następników: "); aLGraph.DFSWithTimer();
+    printf("\nBFS dla listy następników: "); aLGraph.BFS();
+    printf("\nsortowanie topologiczne BFS dla listy następników: "); aLGraph.topologicalSortBFS();
+    printf("\nsortowanie topologiczne DFS dla listy następników: "); aLGraph.topologicalSortDFS();
+    printf("\n");printf("\n");
 
-    eLGraph.DFSWithTimer();
-    printf("\n");
-    eLGraph.BFS();
-    printf("\n");
-    eLGraph.topologicalSortBFS();
-    printf("\n");
-    eLGraph.topologicalSortDFS();
-    printf("\n");
+    printf("DFS dla listy krawędzi: "); eLGraph.DFSWithTimer();
+    printf("\nBFS dla listy krawędzi: "); eLGraph.BFS();
+    printf("\nsortowanie topologiczne BFS dla listy krawędzi: ");eLGraph.topologicalSortBFS();
+    printf("\nsortowanie topologiczne DFS dla listy krawędzi: ");eLGraph.topologicalSortDFS();
+    printf("\n"); printf("\n");
+
+    printf("DFS dla macierzy sąsiedztwa: "); amGraph.DFSWithTimer();
+    printf("\nBFS dla macierzy sąsiedztwa: "); amGraph.BFS();
+    printf("\nsortowanie topologiczne BFS dla macierzy sąsiedztwa: ");amGraph.topologicalSortBFS();
+    printf("\nsortowanie topologiczne DFS dla macierzy sąsiedztwa: ");amGraph.topologicalSortDFS();
+    printf("\n"); printf("\n");
+
 
 
     return 0;

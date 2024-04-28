@@ -8,6 +8,10 @@ add_executable(untitled16 main.cpp
         EdgeListGraph.h
         AdjacencyListGraph.cpp
         AdjacencyListGraph.h
+        IGraph.h
+        AdjacencyMatrixGraph.cpp
+        AdjacencyMatrixGraph.h
+        AdjacencyMatrixGraph.cpp
 )
 target_link_libraries(untitled16 /home/wojciech/CLionProjects/TimeCounter/cmake-build-debug/libTimeCounter.a)
 

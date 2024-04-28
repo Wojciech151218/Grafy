@@ -12,12 +12,9 @@
 #include <queue>
 #include "library.h"
 #include <stack>
+#include "IGraph.h"
 
-class AdjacencyListGraph {
-private:
-    enum Colour{White,Grey,Black};
-
-
+class AdjacencyListGraph: private IGraph{
 public:
     explicit AdjacencyListGraph(const std::vector<std::vector<bool>> upperMatrix);
     void DFS(int vertex = {0} ,std::unordered_set<int> * traversed = nullptr);
@@ -25,13 +22,11 @@ public:
     void BFS(int vertex = 0);
     void topologicalSortBFS();
     void topologicalSortDFS();
-    void DFSUtil(int vertex, std::vector<Colour> * , std::stack<int> & stack);
 
 
-    static void updateCellInfo(TimeCounter::CellInfo);
 
 private:
-    static inline TimeCounter::CellInfo cellInfo;
+    void DFSUtil(int vertex, std::vector<Colour> * , std::stack<int> & stack);
     std::map<int, std::vector<int>> adjacencyList;
 
 

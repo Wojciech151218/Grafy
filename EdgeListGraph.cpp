@@ -40,8 +40,8 @@ void EdgeListGraph::DFS(int vertex, std::unordered_set<int> * traversed) {
 }
 
 void EdgeListGraph::BFS(int vertex) {
-    std::unordered_set<int> visited;
-    std::queue<int> queue;
+    std::unordered_set<int> visited;// kontener dla już odwiedzonych wierzchołków
+    std::queue<int> queue;// kolejka w której zapisujemy wierzchołki do odwiedzenia w kolejnych iteracjach algorytmu
 
     queue.push(vertex);
     visited.insert(vertex);
@@ -51,19 +51,20 @@ void EdgeListGraph::BFS(int vertex) {
         queue.pop();
         std::cout << currentVertex << " ";
 
+        // Przechodzimy przez wszystkie krawędzie
         for (Edge edge : edges) {
+            // Jeśli krawędź zaczyna się w obecnym wierzchołku i jej koniec nie był odwiedzony, dodajemy go do kolejki
             if (edge.sourceVertex == currentVertex and
-                    visited.find(edge.destinationVertex) == visited.end()) {
+                visited.find(edge.destinationVertex) == visited.end()) {
                 queue.push(edge.destinationVertex);
                 visited.insert(edge.destinationVertex);
             }
         }
     }
-
 }
-void EdgeListGraph::topologicalSortBFS() {
-    // Calculate indegrees for each vertex
 
+void EdgeListGraph::topologicalSortBFS() {
+    // Obliczamy stopień wejściowy dla każdego wierzchołka
     std::unordered_map<int,int> indegree;
     for (const auto& edge : edges) {
         auto destination = indegree.find(edge.destinationVertex);
@@ -79,7 +80,7 @@ void EdgeListGraph::topologicalSortBFS() {
     std::queue<int> q;
     std::vector<int> result;
 
-    // Enqueue vertices with indegree 0
+    // kolejkujemy wierzchołki o stopniu równym 0
     for (int i = 0; i < indegree.size(); ++i) {
         if (indegree[i] == 0)
             q.push(i);
@@ -90,7 +91,7 @@ void EdgeListGraph::topologicalSortBFS() {
         q.pop();
         result.push_back(v);
 
-        // Decrease indegree of adjacent vertices
+        //
         for (auto &&edge : edges) {
             if(edge.sourceVertex != v) continue;
             int u = edge.destinationVertex;
@@ -103,16 +104,15 @@ void EdgeListGraph::topologicalSortBFS() {
     // Output topological order
     for (int v : result)
         std::cout << v << " ";
-
-
 }
 
 void EdgeListGraph::DFSUtil(int vertex, std::map<int,Colour> * colours, std::stack<int>& stack) {
     (*colours)[vertex] = Grey;
 
+    // Przechodzimy przez wszystkie krawędzie
     for (auto &&edge : edges) {
         if (edge.sourceVertex==vertex and
-                (*colours)[edge.destinationVertex]==White)
+            (*colours)[edge.destinationVertex]==White)
             DFSUtil(edge.destinationVertex, colours, stack);
     }
     (*colours)[vertex] = Black;
@@ -123,6 +123,7 @@ void EdgeListGraph::topologicalSortDFS() {
     std::stack<int> stack;
     std::map<int,Colour> colours;
 
+    // Inicjujemy mapę kolorów dla wierzchołków
     for(auto&& edge : edges){
         auto destination = colours.find(edge.destinationVertex);
         auto source = colours.find(edge.sourceVertex);
@@ -132,14 +133,15 @@ void EdgeListGraph::topologicalSortDFS() {
             colours.emplace(edge.destinationVertex,White);
     }
 
+    // Przechodzimy przez wszystkie krawędzie
     for (const auto& edge : edges) {
-        
         int vertex = edge.sourceVertex;
+        // Jeśli wierzchołek jest biały, rozpoczynamy od niego DFS
         if (colours[vertex]==White)
             DFSUtil(vertex, &colours, stack);
     }
 
-    // Print the topological ordering
+    // Wyświetlamy topologiczne uporządkowanie
     while (!stack.empty()) {
         std::cout << stack.top() << " ";
         stack.pop();
