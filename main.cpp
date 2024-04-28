@@ -80,8 +80,8 @@ int main() {
     printf("\n");
 
 
-
     return 0;
+    /*
     TimeCounter::generateDirectory("/home/wojciech/CLionProjects/untitled16");
 
     std::string bfsTopologicalName = "sortowanie_topologiczne_BFS";
@@ -127,4 +127,6 @@ int main() {
     TimeCounter::generateExcelSheet("/home/wojciech/CLionProjects/untitled16/generateExcel.py");
 
     return 0;
+
+    */
 }
