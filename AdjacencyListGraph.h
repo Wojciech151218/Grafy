@@ -14,6 +14,8 @@
 #include <stack>
 
 class AdjacencyListGraph {
+private:
+    enum Colour{White,Grey,Black};
 
 
 public:
@@ -23,7 +25,8 @@ public:
     void BFS(int vertex = 0);
     void topologicalSortBFS();
     void topologicalSortDFS();
-    void DFSUtil(int vertex, std::unordered_set<int>& visited, std::stack<int>& stack);
+    void DFSUtil(int vertex, std::vector<Colour> * , std::stack<int> & stack);
+
 
     static void updateCellInfo(TimeCounter::CellInfo);
 

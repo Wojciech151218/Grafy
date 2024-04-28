@@ -53,7 +53,6 @@ std::vector<AdjacencyListGraph*> adjacencyListGraphs;
 std::vector<EdgeListGraph*> edgeListGraphs;
 
 
-
 int main() {
     auto randomMatrix = getRandomMatrix(10);
 

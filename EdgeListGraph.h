@@ -14,6 +14,8 @@
 #include "library.h"
 
 class EdgeListGraph {
+private:
+    enum Colour{White,Grey,Black};
 public:
     struct Edge {
         int sourceVertex;
@@ -32,9 +34,10 @@ public:
 
     void addEdge(Edge edge);
 private:
-    void DFSUtil(int vertex, std::unordered_set<int>& visited, std::stack<int>& stack);
+    void DFSUtil(int vertex, std::map<int,Colour> *, std::stack<int> & stack);
     std::vector<Edge> edges;
     static inline TimeCounter::CellInfo cellInfo;
+
 
 };
 

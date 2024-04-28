@@ -93,26 +93,27 @@ void AdjacencyListGraph::topologicalSortBFS() {
 
 }
 
-void AdjacencyListGraph::DFSUtil(int vertex, std::unordered_set<int>& visited, std::stack<int>& stack) {
-    visited.insert(vertex);
+void AdjacencyListGraph::DFSUtil(int vertex, std::vector<Colour> * colours, std::stack<int>& stack) {
+    (*colours)[vertex] = Grey;
 
-    for (int neighbor : adjacencyList[vertex]) {
-        if (visited.find(neighbor) == visited.end()) {
-            DFSUtil(neighbor, visited, stack);
+    for (int neighbour : adjacencyList[vertex]) {
+        if ( (*colours)[neighbour]==White ) {
+            DFSUtil(neighbour, colours, stack);
         }
     }
 
+    (*colours)[vertex] = Black;
     stack.push(vertex);
 }
 
 void AdjacencyListGraph::topologicalSortDFS() {
     std::stack<int> stack;
-    std::unordered_set<int> visited;
+    std::vector<Colour> colours(adjacencyList.size(),White);
 
     for (const auto& pair : adjacencyList) {
         int vertex = pair.first;
-        if (visited.find(vertex) == visited.end()) {
-            DFSUtil(vertex, visited, stack);
+        if (colours[vertex] == White) {
+            DFSUtil(vertex, &colours, stack);
         }
     }
 

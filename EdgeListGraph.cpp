@@ -52,7 +52,8 @@ void EdgeListGraph::BFS(int vertex) {
         std::cout << currentVertex << " ";
 
         for (Edge edge : edges) {
-            if (visited.find(edge.destinationVertex) == visited.end()) {
+            if (edge.sourceVertex == currentVertex and
+                    visited.find(edge.destinationVertex) == visited.end()) {
                 queue.push(edge.destinationVertex);
                 visited.insert(edge.destinationVertex);
             }
@@ -106,26 +107,36 @@ void EdgeListGraph::topologicalSortBFS() {
 
 }
 
-void EdgeListGraph::DFSUtil(int vertex, std::unordered_set<int>& visited, std::stack<int>& stack) {
-    visited.insert(vertex);
+void EdgeListGraph::DFSUtil(int vertex, std::map<int,Colour> * colours, std::stack<int>& stack) {
+    (*colours)[vertex] = Grey;
 
     for (auto &&edge : edges) {
-        if (edge.sourceVertex==vertex and visited.find(edge.destinationVertex) == visited.end()) {
-            DFSUtil(edge.destinationVertex, visited, stack);
-        }
+        if (edge.sourceVertex==vertex and
+                (*colours)[edge.destinationVertex]==White)
+            DFSUtil(edge.destinationVertex, colours, stack);
     }
-
+    (*colours)[vertex] = Black;
     stack.push(vertex);
 }
 
 void EdgeListGraph::topologicalSortDFS() {
     std::stack<int> stack;
-    std::unordered_set<int> visited;
+    std::map<int,Colour> colours;
+
+    for(auto&& edge : edges){
+        auto destination = colours.find(edge.destinationVertex);
+        auto source = colours.find(edge.sourceVertex);
+        if(source == colours.end())
+            colours.emplace(edge.sourceVertex,White);
+        if(destination == colours.end())
+            colours.emplace(edge.destinationVertex,White);
+    }
 
     for (const auto& edge : edges) {
+        
         int vertex = edge.sourceVertex;
-        if (visited.find(vertex) == visited.end())
-            DFSUtil(vertex, visited, stack);
+        if (colours[vertex]==White)
+            DFSUtil(vertex, &colours, stack);
     }
 
     // Print the topological ordering
