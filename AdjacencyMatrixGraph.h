@@ -14,7 +14,7 @@
 #include "library.h"
 #include <stack>
 
-class AdjacencyMatrixGraph : private IGraph {
+class AdjacencyMatrixGraph : public IGraph {
 public:
     explicit AdjacencyMatrixGraph(const std::vector<std::vector<bool>> upperMatrix);
 
@@ -27,8 +27,7 @@ public:
     void BFS(int vertex = 0);
     void topologicalSortBFS();
     void topologicalSortDFS();
-
-
+    void static updateCellInfo(TimeCounter::CellInfo CI){cellInfo = CI;};
 
 
 private:

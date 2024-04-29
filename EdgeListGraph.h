@@ -14,7 +14,7 @@
 #include "library.h"
 #include "IGraph.h"
 
-class EdgeListGraph : private IGraph{
+class EdgeListGraph : public IGraph{
 public:
     struct Edge {
         int sourceVertex;
@@ -28,14 +28,12 @@ public:
     void topologicalSortBFS();
     void topologicalSortDFS();
     void DFSWithTimer(){ TimeCounter timeCounter(cellInfo);DFS();}
+    void static updateCellInfo(TimeCounter::CellInfo CI){cellInfo = CI;};
 
-
-
-    void addEdge(Edge edge);
 private:
     void DFSUtil(int vertex, std::map<int,Colour> *, std::stack<int> & stack);
     std::vector<Edge> edges;
-    static inline TimeCounter::CellInfo cellInfo;
+
 
 
 };

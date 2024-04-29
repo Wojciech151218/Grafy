@@ -15,6 +15,8 @@ AdjacencyMatrixGraph::AdjacencyMatrixGraph(const std::vector<std::vector<bool>> 
 }
 
 void AdjacencyMatrixGraph::DFS(int vertex, std::unordered_set<int> *traversed) {
+    TimeCounter timeCounter(cellInfo);
+
     std::unique_ptr<std::unordered_set<int>> traversedPtr;
     if (not traversed) {
         traversedPtr = std::make_unique<std::unordered_set<int>>();
@@ -56,6 +58,8 @@ void AdjacencyMatrixGraph::BFS(int vertex) {
 }
 
 void AdjacencyMatrixGraph::topologicalSortBFS() {
+    TimeCounter timeCounter(cellInfo);
+
 // obliczamy stopien dla krawedzi wchodzacacych dla każdego wierzchołka
     std::vector<int> indegree(adjacencyMatrix.size(), 0);
     for (int i = 0; i < adjacencyMatrix.size() ; ++i) {
@@ -92,6 +96,8 @@ void AdjacencyMatrixGraph::topologicalSortBFS() {
 }
 
 void AdjacencyMatrixGraph::topologicalSortDFS() {
+    TimeCounter timeCounter(cellInfo);
+
     std::stack<int> stack; // stos dla posortowanych wierzchłków
     std::vector<Colour> colours(adjacencyMatrix.size(),White);//tworzymy kontener dla kolorów wierzchołków
 

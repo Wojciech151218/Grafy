@@ -21,6 +21,8 @@ AdjacencyListGraph::AdjacencyListGraph(const std::vector<std::vector<bool>> uppe
 }
 
 void AdjacencyListGraph::DFS(int vertex ,std::unordered_set<int>* traversed ) {
+    TimeCounter timeCounter(cellInfo);
+
     std::unique_ptr<std::unordered_set<int>> traversedPtr;// tworzymy kontener dla odwiedzonych wierzchołków
     if (not traversed) {
         traversedPtr = std::make_unique<std::unordered_set<int>>();
@@ -39,7 +41,6 @@ void AdjacencyListGraph::DFS(int vertex ,std::unordered_set<int>* traversed ) {
 }
 
 void AdjacencyListGraph::BFS(int vertex) {
-    //COUNTER
     TimeCounter timeCounter(cellInfo);
 
     std::unordered_set<int> visited;// kontener dla już odwiedzonych wierzchołków
@@ -64,6 +65,8 @@ void AdjacencyListGraph::BFS(int vertex) {
 }
 
 void AdjacencyListGraph::topologicalSortBFS() {
+    TimeCounter timeCounter(cellInfo);
+
     // Obliczamy stopień wejściowy dla każdego wierzchołka
     std::vector<int> indegree(adjacencyList.size(), 0);
     for (const auto& pair : adjacencyList) {
@@ -112,16 +115,17 @@ void AdjacencyListGraph::DFSUtil(int vertex, std::vector<Colour> * colours, std:
 }
 
 void AdjacencyListGraph::topologicalSortDFS() {
-    std::stack<int> stack;
+    TimeCounter timeCounter(cellInfo);
+
+    std::stack<int> stack;//stos dla posrtowanych wierzchołków
     std::vector<Colour> colours(adjacencyList.size(),White);
 
     // Przechodzimy przez wszystkie wierzchołki
     for (const auto& pair : adjacencyList) {
         int vertex = pair.first;
         // Jeśli wierzchołek jest biały, rozpoczynamy od niego DFS
-        if (colours[vertex] == White) {
+        if (colours[vertex] == White)
             DFSUtil(vertex, &colours, stack);
-        }
     }
 
     while (!stack.empty()) {

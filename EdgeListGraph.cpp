@@ -6,10 +6,6 @@
 
 #include "EdgeListGraph.h"
 
-void EdgeListGraph::addEdge(EdgeListGraph::Edge edge) {
-    edges.push_back(edge);
-}
-
 
 EdgeListGraph::EdgeListGraph(std::vector<std::vector<bool>> upperMatrix){
     for (int i = 0; i < upperMatrix.size(); ++i){
@@ -22,6 +18,8 @@ EdgeListGraph::EdgeListGraph(std::vector<std::vector<bool>> upperMatrix){
 
 
 void EdgeListGraph::DFS(int vertex, std::unordered_set<int> * traversed) {
+    TimeCounter timeCounter(cellInfo);
+
     std::unique_ptr<std::unordered_set<int>> traversedPtr;
     if (traversed == nullptr) {
         traversedPtr = std::make_unique<std::unordered_set<int>>();
@@ -40,6 +38,8 @@ void EdgeListGraph::DFS(int vertex, std::unordered_set<int> * traversed) {
 }
 
 void EdgeListGraph::BFS(int vertex) {
+    TimeCounter timeCounter(cellInfo);
+
     std::unordered_set<int> visited;// kontener dla już odwiedzonych wierzchołków
     std::queue<int> queue;// kolejka w której zapisujemy wierzchołki do odwiedzenia w kolejnych iteracjach algorytmu
 
@@ -47,7 +47,7 @@ void EdgeListGraph::BFS(int vertex) {
     visited.insert(vertex);
 
     while (not queue.empty()) {
-        int currentVertex = queue.front();
+        int currentVertex = queue.front();//obecny wierzchołek to ten z przodu kolejki
         queue.pop();
         std::cout << currentVertex << " ";
 
@@ -64,17 +64,20 @@ void EdgeListGraph::BFS(int vertex) {
 }
 
 void EdgeListGraph::topologicalSortBFS() {
+    TimeCounter timeCounter(cellInfo);
+
     // Obliczamy stopień wejściowy dla każdego wierzchołka
     std::unordered_map<int,int> indegree;
     for (const auto& edge : edges) {
         auto destination = indegree.find(edge.destinationVertex);
         auto source = indegree.find(edge.sourceVertex);
         if(source == indegree.end())
-            indegree.emplace(edge.sourceVertex,0);
+            indegree.emplace(edge.sourceVertex,0);//znajdujemy wierzchołek
         if(destination != indegree.end())
             indegree[edge.destinationVertex]++;
         else
             indegree.emplace(edge.destinationVertex,1);
+        //znajdujemy wierzchołek z krawędzią wejściową
     }
 
     std::queue<int> q;
@@ -85,23 +88,23 @@ void EdgeListGraph::topologicalSortBFS() {
         if (indegree[i] == 0)
             q.push(i);
     }
-
+    //
     while (!q.empty()) {
         int v = q.front();
         q.pop();
         result.push_back(v);
 
-        //
+        // Zmniejszamy stopień wejściowy dla sąsiednich wierzchołków wierzchołka v ponieważ uznajemy go za posortwanego
         for (auto &&edge : edges) {
-            if(edge.sourceVertex != v) continue;
+            if(edge.sourceVertex != v) continue;//pomijamy krawedzie
+            //które nie zaczynaja sie w rozpatrywanym wierzhołku
             int u = edge.destinationVertex;
             indegree[u]--;
             if (not indegree[u])
-                q.push(u);
+                q.push(u);//dodajemy sąsiadów do kolejki
         }
     }
 
-    // Output topological order
     for (int v : result)
         std::cout << v << " ";
 }
@@ -109,7 +112,7 @@ void EdgeListGraph::topologicalSortBFS() {
 void EdgeListGraph::DFSUtil(int vertex, std::map<int,Colour> * colours, std::stack<int>& stack) {
     (*colours)[vertex] = Grey;
 
-    // Przechodzimy przez wszystkie krawędzie
+    // Przechodzimy przez wszystkie krawędzie i szukamy białych sąsiadów wierzchołka
     for (auto &&edge : edges) {
         if (edge.sourceVertex==vertex and
             (*colours)[edge.destinationVertex]==White)
@@ -120,8 +123,11 @@ void EdgeListGraph::DFSUtil(int vertex, std::map<int,Colour> * colours, std::sta
 }
 
 void EdgeListGraph::topologicalSortDFS() {
-    std::stack<int> stack;
-    std::map<int,Colour> colours;
+    TimeCounter timeCounter(cellInfo);
+
+    std::stack<int> stack;//stos dla posrtowanych wierzchołków
+    std::map<int,Colour> colours;//mapa gdzie kluczem jest wierzchołek
+    //a wartością kolor
 
     // Inicjujemy mapę kolorów dla wierzchołków
     for(auto&& edge : edges){
@@ -141,7 +147,6 @@ void EdgeListGraph::topologicalSortDFS() {
             DFSUtil(vertex, &colours, stack);
     }
 
-    // Wyświetlamy topologiczne uporządkowanie
     while (!stack.empty()) {
         std::cout << stack.top() << " ";
         stack.pop();

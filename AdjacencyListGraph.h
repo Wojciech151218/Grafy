@@ -14,7 +14,7 @@
 #include <stack>
 #include "IGraph.h"
 
-class AdjacencyListGraph: private IGraph{
+class AdjacencyListGraph: public IGraph{
 public:
     explicit AdjacencyListGraph(const std::vector<std::vector<bool>> upperMatrix);
     void DFS(int vertex = {0} ,std::unordered_set<int> * traversed = nullptr);
@@ -22,6 +22,7 @@ public:
     void BFS(int vertex = 0);
     void topologicalSortBFS();
     void topologicalSortDFS();
+    void static updateCellInfo(TimeCounter::CellInfo CI){cellInfo = CI;};
 
 
 

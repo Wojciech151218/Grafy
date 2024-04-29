@@ -56,7 +56,7 @@ std::vector<EdgeListGraph*> edgeListGraphs;
 
 
 int main() {
-    auto randomMatrix = getRandomMatrix(10);
+    /*auto randomMatrix = getRandomMatrix(10);
 
     AdjacencyListGraph aLGraph(randomMatrix);
     EdgeListGraph eLGraph(randomMatrix);
@@ -79,11 +79,11 @@ int main() {
     printf("\nsortowanie topologiczne BFS dla macierzy sąsiedztwa: ");amGraph.topologicalSortBFS();
     printf("\nsortowanie topologiczne DFS dla macierzy sąsiedztwa: ");amGraph.topologicalSortDFS();
     printf("\n"); printf("\n");
-
-
-
     return 0;
-    /*
+
+
+*/
+    std::vector<IGraph*> graphs;
     TimeCounter::generateDirectory("/home/wojciech/CLionProjects/untitled16");
 
     std::string bfsTopologicalName = "sortowanie_topologiczne_BFS";
@@ -91,7 +91,12 @@ int main() {
     std::string dfsTopologicalName = "sortowanie_topologiczne_DFS";
     std::string dfsName = "przeglądanie_DFS";
 
-    TimeCounter::addColumnNames({bfsName,bfsTopologicalName,dfsName,dfsTopologicalName});
+    std::string adjacencyMatrixName = "macierz_sąsiedztwa";
+    std::string adjacencyListName = "lista_następników";
+    std::string edgeListName = "Lista_krawędzi";
+
+
+    TimeCounter::addColumnNames({adjacencyListName,adjacencyMatrixName,edgeListName});
 
     std::vector<int> sizes ;
     for(int i=1;i<=10;i++)
@@ -101,34 +106,61 @@ int main() {
     for(auto &&it :sizes){
         TimeCounter::addIndex(it);
         auto matrix = getRandomMatrix(it);
-        adjacencyListGraphs.push_back(new AdjacencyListGraph(matrix));
-        edgeListGraphs.push_back(new EdgeListGraph(matrix));
+        graphs.push_back(new AdjacencyListGraph(matrix));
+        graphs.push_back(new EdgeListGraph(matrix));
+        graphs.push_back(new AdjacencyMatrixGraph(matrix));
     }
 
     int size = 0;
-    TimeCounter::addFileName("Lista_sąsiedztwa");
-    for(auto&& graph:adjacencyListGraphs){
-        AdjacencyListGraph::updateCellInfo({sizes[size],bfsName});
-        graph->BFS();
-        AdjacencyListGraph::updateCellInfo({sizes[size++],dfsName});
-        graph->DFSWithTimer();
+    TimeCounter::addFileName(dfsName);
+    for (auto it = graphs.begin(); it!=graphs.end();it++) {
+        AdjacencyListGraph::updateCellInfo({sizes[size],adjacencyListName});
+        (*it)->DFSWithTimer();
+        EdgeListGraph::updateCellInfo({sizes[size],edgeListName});
+        (*it++)->DFSWithTimer();
+        AdjacencyMatrixGraph::updateCellInfo({sizes[size++],adjacencyMatrixName});
+        (*it++)->DFSWithTimer();
     }
     TimeCounter::generateFile();
-
     size = 0;
-    TimeCounter::addFileName("Lista_krawędzi");
-    for(auto&& graph:edgeListGraphs){
-        EdgeListGraph::updateCellInfo({sizes[size],bfsName});
-        graph->BFS();
-        EdgeListGraph::updateCellInfo({sizes[size++],dfsName});
-        graph->DFSWithTimer();
+    TimeCounter::addFileName(bfsName);
+    for (auto it = graphs.begin(); it!=graphs.end();it++) {
+        AdjacencyListGraph::updateCellInfo({sizes[size],adjacencyListName});
+        (*it)->BFS();
+        EdgeListGraph::updateCellInfo({sizes[size],edgeListName});
+        (*it++)->BFS();
+        AdjacencyMatrixGraph::updateCellInfo({sizes[size++],adjacencyMatrixName});
+        (*it++)->BFS();
     }
+    TimeCounter::generateFile();
+    size = 0;
+    TimeCounter::addFileName(dfsTopologicalName);
+    for (auto it = graphs.begin(); it!=graphs.end();it++) {
+        AdjacencyListGraph::updateCellInfo({sizes[size],adjacencyListName});
+        (*it)->topologicalSortDFS();
+        EdgeListGraph::updateCellInfo({sizes[size],edgeListName});
+        (*it++)->topologicalSortDFS();
+        AdjacencyMatrixGraph::updateCellInfo({sizes[size++],adjacencyMatrixName});
+        (*it++)->topologicalSortDFS();
+    }
+    TimeCounter::generateFile();
+    size = 0;
+    TimeCounter::addFileName(bfsTopologicalName);
+    for (auto it = graphs.begin(); it!=graphs.end();it++) {
+        AdjacencyListGraph::updateCellInfo({sizes[size],adjacencyListName});
+        (*it)->topologicalSortBFS();
+        EdgeListGraph::updateCellInfo({sizes[size],edgeListName});
+        (*it++)->topologicalSortBFS();
+        AdjacencyMatrixGraph::updateCellInfo({sizes[size++],adjacencyMatrixName});
+        (*it++)->topologicalSortBFS();
+    }
+    TimeCounter::generateFile();
     size = 0;
 
-    TimeCounter::generateFile();
+
+
+
     TimeCounter::generateExcelSheet("/home/wojciech/CLionProjects/untitled16/generateExcel.py");
 
     return 0;
-
-    */
 }

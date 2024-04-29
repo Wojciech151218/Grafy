@@ -15,9 +15,8 @@ public:
     virtual void BFS(int vertex = 0) = 0;
     virtual void topologicalSortBFS() = 0;
     virtual void topologicalSortDFS() = 0;
-    static void updateCellInfo(TimeCounter::CellInfo CI){
-        cellInfo = CI;
-    };
+
+
 
 
 protected:
